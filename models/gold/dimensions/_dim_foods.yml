@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: dim_foods
+    description: "Dimensión de alimentos de NutriTrack enriquecida con atributos derivados.
+                  Incluye segmentación calórica basada en percentiles 33 y 66 de los datos reales,
+                  flag de alto contenido proteico y perfil macronutricional dominante."
+    columns:
+      - name: food_id
+        description: "PK - Identificador único del alimento (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: food_name
+        description: "Nombre del alimento"
+        tests:
+          - not_null
+      - name: calories_per_100g
+        description: "Calorías por 100g. Nulo si el valor original era anómalo (9999 o negativo)"
+      - name: protein_g
+        description: "Gramos de proteína por 100g"
+      - name: carbs_g
+        description: "Gramos de carbohidratos por 100g"
+      - name: fat_g
+        description: "Gramos de grasa por 100g"
+      - name: fiber_g
+        description: "Gramos de fibra por 100g"
+      - name: category
+        description: "Categoría del alimento normalizada"
+      - name: source
+        description: "Fuente del alimento normalizada a minúsculas"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['synthetic', 'usda']
+      - name: calorie_tier
+        description: "Segmento calórico basado en percentiles 33 y 66: low (<76), medium (76-250), high (>250)"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['low', 'medium', 'high']
+      - name: is_high_protein
+        description: "Flag que indica si el alimento tiene alto contenido proteico (>9.36g, media del dataset)"
+      - name: macronutrient_profile
+        description: "Perfil macronutricional dominante: protein_rich, carb_rich, fat_rich, balanced"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['protein_rich', 'carb_rich', 'fat_rich', 'balanced']

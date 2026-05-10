@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: dim_users
+    description: "Dimensión de usuarios de NutriTrack enriquecida con atributos derivados.
+                  Incluye segmentación por edad y antigüedad como usuario."
+    columns:
+      - name: user_id
+        description: "PK - Identificador único del usuario (INTEGER)"
+        tests:
+          - unique
+          - not_null
+      - name: user_name
+        description: "Nombre del usuario"
+        tests:
+          - not_null
+      - name: email
+        description: "Email del usuario"
+        tests:
+          - unique
+          - not_null
+      - name: gender
+        description: "Género del usuario"
+      - name: phone
+        description: "Teléfono del usuario"
+      - name: birth_date
+        description: "Fecha de nacimiento del usuario"
+      - name: created_at
+        description: "Fecha de registro del usuario"
+        tests:
+          - not_null
+      - name: age
+        description: "Edad actual del usuario calculada desde birth_date"
+      - name: age_group
+        description: "Segmento de edad del usuario: Under 18, 18-25, 26-35, 36-45, 46-55, 55+"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Under 18', '18-25', '26-35', '36-45', '46-55', '55+']
+      - name: days_since_registration
+        description: "Días transcurridos desde el registro del usuario"
+        tests:
+          - not_null
+      - name: registration_year
+        description: "Año de registro del usuario"
+        tests:
+          - not_null
+      - name: registration_month
+        description: "Mes de registro del usuario"
+        tests:
+          - not_null
+      - name: is_recent_user
+        description: "Flag que indica si el usuario se registró en los últimos 90 días"
+        tests:
+          - not_null

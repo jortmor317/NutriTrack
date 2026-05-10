@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_goals
+    description: "Objetivos nutricionales de usuarios limpios y estandarizados.
+                  Se normaliza goal_type a snake_case minúsculas ya que Bronze contiene
+                  inconsistencias ('Lose Weight', 'lose_weight', 'GAIN_MUSCLE').
+                  Campos con nulos: goal_type (1207), target_protein_g (486), 
+                  target_carbs_g (546), target_fat_g (538). Pendiente de estrategia
+                  de imputación con negocio."
+    columns:
+      - name: goal_id
+        description: "PK - Identificador único del objetivo (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario (INTEGER)"
+        tests:
+          - not_null
+      - name: target_calories
+        description: "Objetivo de calorías diarias"
+        tests:
+          - not_null
+      - name: target_protein_g
+        description: "Objetivo de proteínas en gramos. Puede ser nulo (486 registros)."
+      - name: target_carbs_g
+        description: "Objetivo de carbohidratos en gramos. Puede ser nulo (546 registros)."
+      - name: target_fat_g
+        description: "Objetivo de grasas en gramos. Puede ser nulo (538 registros)."
+      - name: goal_type
+        description: "Tipo de objetivo normalizado a snake_case minúsculas. 
+                      Puede ser nulo (1207 registros sin tipo definido).
+                      Pendiente de estrategia de imputación con negocio."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['lose_weight', 'gain_muscle', 'maintain']
+      - name: set_at
+        description: "Fecha de establecimiento del objetivo"
+        tests:
+          - not_null

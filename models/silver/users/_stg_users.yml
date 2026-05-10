@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Usuarios del sistema NutriTrack limpios y estandarizados. 
+                  Se deduplica por email quedándose con el registro más reciente (created_at DESC) 
+                  ya que Bronze puede contener duplicados de la fuente original."
+    columns:
+      - name: user_id
+        description: "Identificador único del usuario"
+        tests:
+          - unique
+          - not_null
+      - name: user_name
+        description: "Nombre del usuario"
+        tests:
+          - not_null
+      - name: email
+        description: "Email del usuario"
+        tests:
+          - unique
+          - not_null
+      - name: birth_date
+        description: "Fecha de nacimiento del usuario"
+      - name: gender
+        description: "Género del usuario"
+      - name: phone
+        description: "Teléfono del usuario"
+      - name: created_at
+        description: "Fecha de creación del usuario"
+        tests:
+          - not_null

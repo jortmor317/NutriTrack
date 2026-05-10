@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_promos
+    description: "Promociones disponibles en NutriTrack limpias y estandarizadas."
+    columns:
+      - name: promo_id
+        description: "PK - Identificador único de la promoción (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: promo_code
+        description: "Código de la promoción"
+        tests:
+          - unique
+          
+      - name: discount_pct
+        description: "Porcentaje de descuento de la promoción"
+        
+      - name: valid_from
+        description: "Fecha de inicio de validez de la promoción"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "Fecha de fin de validez de la promoción"
+        
+      - name: description
+        description: "Descripción de la promoción"

@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: dim_nutritionists
+    description: "Dimensión de nutricionistas de NutriTrack enriquecida con atributos derivados.
+                  Incluye segmentación por nivel de experiencia y antigüedad en la plataforma
+                  para análisis de correlación entre experiencia y resultados de usuarios."
+    columns:
+      - name: nutritionist_id
+        description: "PK - Identificador único del nutricionista (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: nutritionist_name
+        description: "Nombre del nutricionista"
+        tests:
+          - not_null
+      - name: email
+        description: "Email del nutricionista"
+        tests:
+          - unique
+          - not_null
+      - name: specialty
+        description: "Especialidad del nutricionista"
+      - name: years_experience
+        description: "Años de experiencia del nutricionista"
+      - name: created_at
+        description: "Fecha de alta del nutricionista en la plataforma"
+        tests:
+          - not_null
+      - name: experience_tier
+        description: "Segmento de experiencia: junior (<3 años), senior (3-10 años), expert (>10 años)"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['junior', 'senior', 'expert']
+      - name: days_on_platform
+        description: "Días transcurridos desde el alta del nutricionista en la plataforma"
+        tests:
+          - not_null

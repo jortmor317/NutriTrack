@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_food_logs
+    description: "Registros de comidas de usuarios limpios y estandarizados.
+                  Se normaliza meal_type a minúsculas ya que Bronze contiene
+                  inconsistencias ('Breakfast', 'LUNCH', 'dinner')."
+    columns:
+      - name: food_log_id
+        description: "PK - Identificador único del registro de comida (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario (INTEGER)"
+        tests:
+          - not_null
+      - name: meal_plan_id
+        description: "FK - Identificador del plan de comida (UUID)"
+      - name: log_date
+        description: "Fecha del registro de comida"
+        tests:
+          - not_null
+      - name: meal_type
+        description: "Tipo de comida normalizado a minúsculas"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['breakfast', 'lunch', 'dinner', 'snack']
+      - name: notes
+        description: "Notas del registro de comida. Puede ser nulo."
+      - name: created_at
+        description: "Fecha de creación del registro"
+        tests:
+          - not_null

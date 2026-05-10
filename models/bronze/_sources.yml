@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: nutritrack
+    database: "NUTRITRACK_{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"
+    schema: RAW
+    tables:
+      - name: BODY_METRICS
+      - name: FOODS
+      - name: FOOD_LOGS
+      - name: FOOD_LOG_ITEMS
+      - name: GOALS
+      - name: MEAL_PLANS
+      - name: NUTRITIONISTS
+      - name: PROMOS
+      - name: RECIPES
+      - name: RECIPES_RAW
+      - name: RECIPE_INGREDIENTS
+      - name: SUBSCRIPTIONS
+      - name: SUBSCRIPTION_CANCELLATIONS
+      - name: SUBSCRIPTION_PLANS
+      - name: USERS
+      - name: USER_NUTRITIONIST_ASSIGNMENTS

@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_body_metrics
+    description: "Métricas corporales de usuarios limpias y estandarizadas."
+    columns:
+      - name: body_metric_id
+        description: "PK - Identificador único de la métrica corporal (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario (INTEGER)"
+        tests:
+          - not_null
+      - name: weight_kg
+        description: "Peso del usuario en kilogramos"
+      - name: height_cm
+        description: "Altura del usuario en centímetros"
+      - name: body_fat_pct
+        description: "Porcentaje de grasa corporal del usuario"
+      - name: bmi
+        description: "Índice de masa corporal del usuario"
+      - name: recorded_date
+        description: "Fecha de registro de las métricas"
+        tests:
+          - not_null

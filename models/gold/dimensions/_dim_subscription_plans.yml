@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: dim_subscription_plans
+    description: "Dimensión de planes de suscripción de NutriTrack enriquecida con atributos derivados.
+                  Incluye precio normalizado a mensual y segmentación por precio para 
+                  comparación entre planes y análisis de LTV."
+    columns:
+      - name: plan_id
+        description: "PK - Identificador único del plan (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: plan_name
+        description: "Nombre del plan"
+        tests:
+          - unique
+          - not_null
+      - name: price
+        description: "Precio del plan en su periodo de facturación"
+        tests:
+          - not_null
+      - name: billing_period
+        description: "Periodo de facturación del plan"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['monthly', 'annual']
+      - name: monthly_price
+        description: "Precio normalizado a mensual para comparar planes entre sí.
+                      Para planes anuales se divide el precio entre 12."
+        tests:
+          - not_null
+      - name: price_tier
+        description: "Segmento de precio mensual: budget (<10), standard (10-30), premium (>30)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['budget', 'standard', 'premium']
+      - name: is_annual
+        description: "Flag que indica si el plan tiene facturación anual"
+        tests:
+          - not_null
