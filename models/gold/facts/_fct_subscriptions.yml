@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: fct_subscriptions
+    description: "Fact de suscripciones de NutriTrack.
+                  Granularidad: una fila por suscripción (subscription_id).
+                  Cada fila representa el ciclo de vida completo de una suscripción
+                  de un usuario a un plan, incluyendo revenue, descuentos y cancelaciones."
+    columns:
+      - name: subscription_id
+        description: "PK - Identificador único de la suscripción (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario (INTEGER)"
+        tests:
+          - not_null
+      - name: plan_id
+        description: "FK - Identificador del plan (UUID)"
+        tests:
+          - not_null
+      - name: promo_id
+        description: "FK - Identificador de la promoción aplicada. Nulo si no se aplicó promo"
+      - name: start_date
+        description: "FK - Fecha de inicio de la suscripción → dim_dates"
+        tests:
+          - not_null
+      - name: end_date
+        description: "Fecha de fin de la suscripción. Nula si está activa"
+      - name: status
+        description: "Estado de la suscripción"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['active', 'cancelled', 'inactive']
+      - name: plan_price
+        description: "Precio del plan en su periodo de facturación"
+        tests:
+          - not_null
+      - name: billing_period
+        description: "Periodo de facturación del plan"
+        tests:
+          - not_null
+      - name: revenue
+        description: "Revenue real generado por la suscripción aplicando descuento si existe"
+        tests:
+          - not_null
+      - name: discount_amount
+        description: "Importe descontado en valor absoluto. 0 si no se aplicó promo"
+        tests:
+          - not_null
+      - name: duration_days
+        description: "Días de duración de la suscripción. Si está activa se calcula hasta hoy"
+        tests:
+          - not_null
+      - name: had_promo
+        description: "Flag que indica si la suscripción se contrató con promoción"
+        tests:
+          - not_null
+      - name: is_cancelled
+        description: "Flag que indica si la suscripción fue cancelada"
+        tests:
+          - not_null
+      - name: cancellation_reason
+        description: "Motivo de cancelación. Nulo si la suscripción no fue cancelada"
+      - name: cancelled_at
+        description: "Fecha de cancelación. Nula si la suscripción no fue cancelada"

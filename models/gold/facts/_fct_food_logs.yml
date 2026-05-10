@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: fct_food_logs
+    description: "Fact de registros de comidas de NutriTrack.
+                  Granularidad: una fila por item de comida registrado (food_log_item_id).
+                  Cada fila representa un alimento consumido en una comida concreta,
+                  con métricas nutricionales calculadas según la cantidad consumida
+                  y comparadas con los objetivos del usuario."
+    columns:
+      - name: food_log_item_id
+        description: "PK - Identificador único del item de comida (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: food_log_id
+        description: "FK - Identificador del registro de comida (UUID)"
+        tests:
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario (INTEGER)"
+        tests:
+          - not_null
+      - name: meal_plan_id
+        description: "FK - Identificador del plan de comida (UUID)"
+      - name: log_date
+        description: "FK - Fecha del registro → dim_dates"
+        tests:
+          - not_null
+      - name: meal_type
+        description: "Tipo de comida: breakfast, lunch, dinner, snack"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['breakfast', 'lunch', 'dinner', 'snack']
+      - name: food_id
+        description: "FK - Identificador del alimento (UUID)"
+        tests:
+          - not_null
+      - name: food_name
+        description: "Nombre del alimento consumido"
+      - name: food_category
+        description: "Categoría del alimento consumido"
+      - name: quantity_g
+        description: "Cantidad consumida en gramos"
+        tests:
+          - not_null
+      - name: calories_consumed
+        description: "Calorías consumidas calculadas: calories_per_100g * quantity_g / 100"
+      - name: protein_consumed_g
+        description: "Proteínas consumidas en gramos"
+      - name: carbs_consumed_g
+        description: "Carbohidratos consumidos en gramos"
+      - name: fat_consumed_g
+        description: "Grasas consumidas en gramos"
+      - name: fiber_consumed_g
+        description: "Fibra consumida en gramos"
+      - name: target_calories
+        description: "Objetivo calórico diario del usuario en el momento del registro"
+      - name: target_protein_g
+        description: "Objetivo de proteínas diarias del usuario"
+      - name: target_carbs_g
+        description: "Objetivo de carbohidratos diarios del usuario"
+      - name: target_fat_g
+        description: "Objetivo de grasas diarias del usuario"
+      - name: pct_daily_calories
+        description: "Porcentaje del objetivo calórico diario cubierto por este item.
+                      Nulo si el usuario no tiene objetivo calórico definido."
+      - name: notes
+        description: "Notas del registro de comida"
