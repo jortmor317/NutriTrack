@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_nutritionists
+    description: "Nutricionistas del sistema NutriTrack limpios y estandarizados."
+    columns:
+      - name: nutritionist_id
+        description: "PK - Identificador único del nutricionista (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: nutritionist_name
+        description: "Nombre del nutricionista"
+        tests:
+          - not_null
+      - name: email
+        description: "Email del nutricionista"
+        tests:
+          - unique
+          - not_null
+      - name: specialty
+        description: "Especialidad del nutricionista"
+      - name: years_experience
+        description: "Años de experiencia del nutricionista"
+      - name: created_at
+        description: "Fecha de creación del registro"
+        tests:
+          - not_null

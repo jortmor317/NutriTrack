@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_recipes
+    description: "Recetas del sistema NutriTrack limpias y estandarizadas.
+                  Las categorías estaban en castellano por inconsistencia de fuente
+                  (sistema origen diferente) y se han normalizado a inglés.
+                  Campos con nulos: recipe_name (10), category (51), 
+                  prep_time_min (115), servings (53)."
+    columns:
+      - name: recipe_id
+        description: "PK - Identificador único de la receta (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: nutritionist_id
+        description: "FK - Identificador del nutricionista (UUID)"
+        tests:
+          - not_null
+      - name: recipe_name
+        description: "Nombre de la receta. Puede ser nulo (10 registros)."
+      - name: category
+        description: "Categoría de la receta normalizada a inglés. 
+                      Bronze contenía categorías en castellano (Desayuno, Almuerzo, Cena, 
+                      Snack, Pre-entreno, Post-entreno) por provenir de un sistema origen diferente."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['breakfast', 'lunch', 'dinner', 'snack', 'pre_workout', 'post_workout']
+      - name: prep_time_min
+        description: "Tiempo de preparación en minutos. Puede ser nulo (115 registros)."
+      - name: servings
+        description: "Número de porciones. Puede ser nulo (53 registros)."
+      - name: created_at
+        description: "Fecha de creación de la receta"
+        tests:
+          - not_null

@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_subscription_cancellations
+    description: "Cancelaciones de suscripciones limpias y estandarizadas.
+                  Se normaliza reason a snake_case minúsculas ya que Bronze contiene
+                  inconsistencias ('NOT_USING', 'not_using', 'Too Expensive').
+                  Campos con nulos: reason (83), feedback (231)."
+    columns:
+      - name: cancellation_id
+        description: "PK - Identificador único de la cancelación (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: subscription_id
+        description: "FK - Identificador de la suscripción (UUID)"
+        tests:
+          - not_null
+      - name: reason
+        description: "Motivo de cancelación normalizado a snake_case minúsculas.
+                      Puede ser nulo (83 registros)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['not_using', 'too_expensive', 'other', 'found_alternative', 'technical_issues']
+      - name: feedback
+        description: "Feedback del usuario al cancelar. Puede ser nulo (231 registros)."
+      - name: cancelled_at
+        description: "Fecha de cancelación"
+        tests:
+          - not_null

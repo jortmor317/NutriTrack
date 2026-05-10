@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_foods
+    description: "Alimentos del sistema NutriTrack limpios y estandarizados.
+                  Se normaliza category con INITCAP y source a minúsculas para
+                  unificar inconsistencias de mayúsculas de la fuente original."
+    columns:
+      - name: food_id
+        description: "PK - Identificador único del alimento (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: food_name
+        description: "Nombre del alimento"
+        tests:
+          - not_null
+      - name: calories_per_100g
+        description: "Calorías por 100g del alimento"
+      - name: protein_g
+        description: "Gramos de proteína por 100g"
+      - name: carbs_g
+        description: "Gramos de carbohidratos por 100g"
+      - name: fat_g
+        description: "Gramos de grasa por 100g"
+      - name: fiber_g
+        description: "Gramos de fibra por 100g"
+      - name: category
+        description: "Categoría del alimento normalizada con INITCAP. 
+                Se unifica 'Seeds And Nuts' → 'Nuts & Seeds' por ser
+                la misma categoría con nombre inconsistente en la fuente."
+      - name: source
+        description: "Fuente del alimento normalizada a minúsculas"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['synthetic', 'usda']

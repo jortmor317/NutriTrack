@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_user_nutritionist_assignments
+    description: "Asignaciones de nutricionistas a usuarios limpias y estandarizadas."
+    columns:
+      - name: assignment_id
+        description: "PK - Identificador único de la asignación (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario (INTEGER)"
+        tests:
+          - not_null
+      - name: nutritionist_id
+        description: "FK - Identificador del nutricionista (UUID)"
+        tests:
+          - not_null
+      - name: start_date
+        description: "Fecha de inicio de la asignación"
+        tests:
+          - not_null
+      - name: end_date
+        description: "Fecha de fin de la asignación. Puede ser nula si la asignación está activa"
+      - name: is_active
+        description: "Indica si la asignación está activa"
+        tests:
+          - not_null

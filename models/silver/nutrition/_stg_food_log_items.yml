@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_food_log_items
+    description: "Items de registros de comidas limpios y estandarizados.
+                  Se normaliza unit a 'g' ya que Bronze contiene múltiples
+                  variantes para gramos ('g', 'gr', 'G', 'grams')."
+    columns:
+      - name: food_log_item_id
+        description: "PK - Identificador único del item (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: food_log_id
+        description: "FK - Identificador del registro de comida (UUID)"
+        tests:
+          - not_null
+      - name: food_id
+        description: "FK - Identificador del alimento (UUID)"
+        tests:
+          - not_null
+      - name: quantity_g
+        description: "Cantidad en gramos del alimento"
+        tests:
+          - not_null
+      - name: unit
+        description: "Unidad de medida normalizada a 'g'. Bronze contenía 'g', 'gr', 'G', 'grams' 
+                      y nulos. Se asume 'g' en todos los casos ya que quantity_g ya indica gramos."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['g']
