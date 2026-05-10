@@ -1,0 +1,129 @@
+version: 2
+
+semantic_models:
+  - name: sem_fct_subscriptions
+    model: ref('fct_subscriptions')
+    description: "Modelo semántico de suscripciones para exposición de métricas de negocio"
+    entities:
+      - name: subscription
+        type: primary
+        expr: subscription_id
+      - name: user
+        type: foreign
+        expr: user_id
+      - name: plan
+        type: foreign
+        expr: plan_id
+    dimensions:
+      - name: status
+        type: categorical
+      - name: had_promo
+        type: categorical
+      - name: is_cancelled
+        type: categorical
+      - name: billing_period
+        type: categorical
+      - name: start_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: revenue
+        agg: sum
+        expr: revenue
+        description: "Revenue total generado"
+      - name: total_subscriptions
+        agg: count_distinct
+        expr: subscription_id
+        description: "Número de suscripciones únicas"
+      - name: discount_amount
+        agg: sum
+        expr: discount_amount
+        description: "Importe total descontado"
+      - name: duration_days
+        agg: average
+        expr: duration_days
+        description: "Duración media de suscripciones"
+
+  - name: sem_fct_food_logs
+    model: ref('fct_food_logs')
+    description: "Modelo semántico de registros de comidas para análisis nutricional"
+    entities:
+      - name: food_log_item
+        type: primary
+        expr: food_log_item_id
+      - name: user
+        type: foreign
+        expr: user_id
+      - name: food
+        type: foreign
+        expr: food_id
+    dimensions:
+      - name: meal_type
+        type: categorical
+      - name: food_category
+        type: categorical
+      - name: log_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: calories_consumed
+        agg: sum
+        expr: calories_consumed
+        description: "Calorías totales consumidas"
+      - name: total_food_log_items
+        agg: count_distinct
+        expr: food_log_item_id
+        description: "Número de items registrados"
+      - name: avg_pct_daily_calories
+        agg: average
+        expr: pct_daily_calories
+        description: "Media del porcentaje del objetivo calórico cubierto"
+
+metrics:
+  - name: total_revenue
+    label: "Revenue Total"
+    description: "Revenue total generado por suscripciones aplicando descuentos"
+    type: simple
+    type_params:
+      measure: revenue
+
+  - name: churn_rate
+    label: "Tasa de Churn"
+    description: "Porcentaje de suscripciones canceladas sobre el total"
+    type: ratio
+    type_params:
+      numerator:
+        name: total_subscriptions
+        filter: "{{ Dimension('subscription__status') }} = 'cancelled'"
+      denominator:
+        name: total_subscriptions
+
+  - name: total_discount
+    label: "Descuento Total"
+    description: "Importe total descontado por promociones aplicadas"
+    type: simple
+    type_params:
+      measure: discount_amount
+
+  - name: avg_subscription_duration
+    label: "Duración Media de Suscripción"
+    description: "Días de duración media de las suscripciones"
+    type: simple
+    type_params:
+      measure: duration_days
+
+  - name: total_calories_consumed
+    label: "Calorías Totales Consumidas"
+    description: "Total de calorías consumidas por todos los usuarios"
+    type: simple
+    type_params:
+      measure: calories_consumed
+
+  - name: avg_daily_calories_pct
+    label: "Media % Objetivo Calórico Cubierto"
+    description: "Porcentaje medio del objetivo calórico diario cubierto por los usuarios"
+    type: simple
+    type_params:
+      measure: avg_pct_daily_calories
