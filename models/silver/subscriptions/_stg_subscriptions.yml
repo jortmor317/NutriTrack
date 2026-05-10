@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: stg_subscriptions
+    description: "Suscripciones de usuarios a planes de NutriTrack limpias y estandarizadas.
+                  Se normaliza el campo status a minúsculas ya que Bronze contiene 
+                  inconsistencias ('Active', 'ACTIVE', 'active')."
+    columns:
+      - name: subscription_id
+        description: "PK - Identificador único de la suscripción"
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario"
+        tests:
+          - not_null
+      - name: plan_id
+        description: "FK - Identificador del plan"
+        tests:
+          - not_null
+      - name: promo_id
+        description: "FK - Identificador de la promoción aplicada. Puede ser nulo si no se aplicó promo"
+      - name: start_date
+        description: "Fecha de inicio de la suscripción"
+        tests:
+          - not_null
+      - name: end_date
+        description: "Fecha de fin de la suscripción. Puede ser nula si la suscripción está activa"
+      - name: status
+        description: "Estado de la suscripción normalizado a minúsculas"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['active', 'cancelled', 'inactive']
+      - name: created_at
+        description: "Fecha de creación del registro"
+        tests:
+          - not_null
