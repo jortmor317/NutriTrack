@@ -30,3 +30,8 @@ models:
       +database: "NUTRITRACK_{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_DB"
       +schema: gold
       +materialized: table
+
+snapshots:
+  nutritrack:
+    +target_schema: snapshots
+    +target_database: "NUTRITRACK_{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"
