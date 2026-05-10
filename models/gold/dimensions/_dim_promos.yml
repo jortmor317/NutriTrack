@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: dim_promos
+    description: "Dimensión de promociones de NutriTrack enriquecida con atributos derivados.
+                  Incluye segmentación por nivel de descuento y flag de vigencia."
+    columns:
+      - name: promo_id
+        description: "PK - Identificador único de la promoción (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: promo_code
+        description: "Código de la promoción"
+        tests:
+          - unique
+      - name: description
+        description: "Descripción de la promoción"
+      - name: discount_pct
+        description: "Porcentaje de descuento de la promoción"
+      - name: valid_from
+        description: "Fecha de inicio de validez de la promoción"
+      - name: valid_to
+        description: "Fecha de fin de validez. Nula si no tiene expiración"
+      - name: is_active
+        description: "Flag que indica si la promoción está vigente a día de hoy"
+        tests:
+          - not_null
+      - name: duration_days
+        description: "Días de vigencia de la promoción. Si no tiene fecha de fin se calcula hasta hoy"
+        tests:
+          - not_null
+      - name: discount_tier
+        description: "Segmento de descuento: low (<10%), medium (10-25%), high (>25%)"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['low', 'medium', 'high']

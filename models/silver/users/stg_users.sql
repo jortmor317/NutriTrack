@@ -7,7 +7,13 @@ renamed as (
         ID::INTEGER             as user_id,
         NAME::VARCHAR           as user_name,
         EMAIL::VARCHAR          as email,
-        BIRTH_DATE::DATE        as birth_date,
+        -- Detectamos el formato de fecha por el separador usado
+        -- YYYY-MM-DD usa guiones, DD/MM/YYYY usa barras
+        CASE
+            WHEN CONTAINS(BIRTH_DATE, '/')
+                THEN TO_DATE(BIRTH_DATE, 'DD/MM/YYYY')
+            ELSE TO_DATE(BIRTH_DATE, 'YYYY-MM-DD')
+        END                     as birth_date,
         GENDER::VARCHAR         as gender,
         PHONE::VARCHAR          as phone,
         CREATED_AT::TIMESTAMP   as created_at
