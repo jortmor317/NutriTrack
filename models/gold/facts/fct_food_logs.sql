@@ -1,3 +1,11 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='food_log_item_id',
+        on_schema_change='sync_all_columns'
+    )
+}}
+
 with food_logs as (
     select * from {{ ref('stg_food_logs') }}
 ),
@@ -13,6 +21,12 @@ foods as (
 goals as (
     select * from {{ ref('stg_goals') }}
 ),
+
+{% if is_incremental() %}
+max_created_at as (
+    select max(created_at) as max_created_at from {{ this }}
+),
+{% endif %}
 
 -- Objetivo calórico más reciente por usuario
 latest_goals as (
@@ -69,7 +83,8 @@ joined as (
         END                                                     as pct_daily_calories,
 
         -- Notas del log
-        fl.notes
+        fl.notes,
+        fl.created_at
 
     from food_log_items fli
     left join food_logs fl
@@ -79,6 +94,14 @@ joined as (
     left join latest_goals g
         on fl.user_id = g.user_id
         and g.rn = 1
+    {% if is_incremental() %}
+    cross join max_created_at m
+    {% endif %}
+
+    where 1=1
+    {% if is_incremental() %}
+        and fl.created_at > m.max_created_at
+    {% endif %}
 )
 
 select * from joined
