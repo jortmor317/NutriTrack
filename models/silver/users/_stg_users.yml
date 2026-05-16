@@ -4,10 +4,13 @@ models:
   - name: stg_users
     description: "Usuarios del sistema NutriTrack limpios y estandarizados. 
                   Se deduplica por email quedándose con el registro más reciente (created_at DESC) 
-                  ya que Bronze puede contener duplicados de la fuente original."
+                  ya que Bronze puede contener duplicados de la fuente original.
+                  Se normaliza birth_date detectando el separador (/ vs -) para parsear correctamente.
+                  Se normaliza gender a male/female/unknown ya que Bronze contenía 
+                  inconsistencias ('M', 'MALE', 'F', 'female') y nulos."
     columns:
       - name: user_id
-        description: "Identificador único del usuario"
+        description: "PK - Identificador único del usuario (INTEGER)"
         tests:
           - unique
           - not_null
@@ -21,9 +24,15 @@ models:
           - unique
           - not_null
       - name: birth_date
-        description: "Fecha de nacimiento del usuario"
+        description: "Fecha de nacimiento del usuario. Bronze contenía dos formatos mezclados
+                      (DD/MM/YYYY y YYYY-MM-DD) — se detecta el separador para parsear correctamente."
       - name: gender
-        description: "Género del usuario"
+        description: "Género del usuario normalizado a male/female/unknown.
+                      Bronze contenía inconsistencias ('M', 'MALE', 'F', 'female') y nulos."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['male', 'female', 'unknown']
       - name: phone
         description: "Teléfono del usuario"
       - name: created_at

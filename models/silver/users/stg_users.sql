@@ -14,7 +14,14 @@ renamed as (
                 THEN TO_DATE(BIRTH_DATE, 'DD/MM/YYYY')
             ELSE TO_DATE(BIRTH_DATE, 'YYYY-MM-DD')
         END                     as birth_date,
-        GENDER::VARCHAR         as gender,
+        -- Normalizamos gender: Bronze contenía 'M', 'MALE', 'F', 'female' y nulos
+        CASE UPPER(TRIM(GENDER))
+            WHEN 'M'        THEN 'male'
+            WHEN 'MALE'     THEN 'male'
+            WHEN 'F'        THEN 'female'
+            WHEN 'FEMALE'   THEN 'female'
+            ELSE 'unknown'
+        END::VARCHAR            as gender,
         PHONE::VARCHAR          as phone,
         CREATED_AT::TIMESTAMP   as created_at
     from source
