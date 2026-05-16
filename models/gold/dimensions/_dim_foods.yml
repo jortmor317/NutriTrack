@@ -2,45 +2,57 @@ version: 2
 
 models:
   - name: dim_foods
-    description: "Dimensión de alimentos de NutriTrack enriquecida con atributos derivados.
-                  Incluye segmentación calórica basada en percentiles 33 y 66 de los datos reales,
-                  flag de alto contenido proteico y perfil macronutricional dominante."
+    description: "Dimensión de alimentos basada en datos oficiales USDA (SR Legacy).
+                  7.792 alimentos con información nutricional validada científicamente.
+                  Sustituye los datos sintéticos originales por datos oficiales del
+                  Departamento de Agricultura de Estados Unidos (FoodData Central).
+                  Incluye macronutrientes, minerales y vitaminas."
     columns:
       - name: food_id
-        description: "PK - Identificador único del alimento (UUID)"
+        description: "PK - Identificador USDA (fdc_id). Referenciado por fct_food_logs."
         tests:
           - unique
           - not_null
       - name: food_name
-        description: "Nombre del alimento"
+        description: "Nombre oficial del alimento según USDA"
         tests:
           - not_null
+      - name: data_type
+        description: "Tipo de dato USDA (SR Legacy)"
+      - name: publication_date
+        description: "Fecha de publicación del registro en USDA"
       - name: calories_per_100g
-        description: "Calorías por 100g. Nulo si el valor original era anómalo (9999 o negativo)"
+        description: "Calorías por 100g en kcal — dato oficial USDA"
       - name: protein_g
-        description: "Gramos de proteína por 100g"
+        description: "Proteínas por 100g en gramos — dato oficial USDA"
       - name: carbs_g
-        description: "Gramos de carbohidratos por 100g"
+        description: "Carbohidratos por 100g en gramos — dato oficial USDA"
       - name: fat_g
-        description: "Gramos de grasa por 100g"
+        description: "Grasas por 100g en gramos — dato oficial USDA"
       - name: fiber_g
-        description: "Gramos de fibra por 100g"
-      - name: category
-        description: "Categoría del alimento normalizada"
-      - name: source
-        description: "Fuente del alimento normalizada a minúsculas"
-        tests:
-          - accepted_values:
-              arguments:
-                values: ['synthetic', 'usda']
+        description: "Fibra por 100g en gramos — dato oficial USDA"
+      - name: sugars_g
+        description: "Azúcares totales por 100g en gramos — dato oficial USDA"
+      - name: calcium_mg
+        description: "Calcio por 100g en miligramos — dato oficial USDA"
+      - name: iron_mg
+        description: "Hierro por 100g en miligramos — dato oficial USDA"
+      - name: sodium_mg
+        description: "Sodio por 100g en miligramos — dato oficial USDA"
+      - name: potassium_mg
+        description: "Potasio por 100g en miligramos — dato oficial USDA"
+      - name: vitamin_c_mg
+        description: "Vitamina C por 100g en miligramos — dato oficial USDA"
+      - name: vitamin_a_iu
+        description: "Vitamina A por 100g en UI — dato oficial USDA"
       - name: calorie_tier
-        description: "Segmento calórico basado en percentiles 33 y 66: low (<76), medium (76-250), high (>250)"
+        description: "Segmento calórico: low (<76), medium (76-250), high (>250)"
         tests:
           - accepted_values:
               arguments:
                 values: ['low', 'medium', 'high']
       - name: is_high_protein
-        description: "Flag que indica si el alimento tiene alto contenido proteico (>9.36g, media del dataset)"
+        description: "Flag alto contenido proteico (>9.36g, media del dataset)"
       - name: macronutrient_profile
         description: "Perfil macronutricional dominante: protein_rich, carb_rich, fat_rich, balanced"
         tests:

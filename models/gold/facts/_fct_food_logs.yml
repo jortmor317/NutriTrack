@@ -6,7 +6,8 @@ models:
                   Granularidad: una fila por item de comida registrado (food_log_item_id).
                   Cada fila representa un alimento consumido en una comida concreta,
                   con métricas nutricionales calculadas según la cantidad consumida
-                  y comparadas con los objetivos del usuario."
+                  usando datos oficiales USDA (SR Legacy).
+                  Incluye macronutrientes, minerales y vitaminas consumidos."
     columns:
       - name: food_log_item_id
         description: "PK - Identificador único del item de comida (UUID)"
@@ -35,19 +36,19 @@ models:
               arguments:
                 values: ['breakfast', 'lunch', 'dinner', 'snack']
       - name: food_id
-        description: "FK - Identificador del alimento (UUID)"
+        description: "FK - Identificador USDA del alimento (fdc_id) → dim_foods"
         tests:
           - not_null
       - name: food_name
-        description: "Nombre del alimento consumido"
-      - name: food_category
-        description: "Categoría del alimento consumido"
+        description: "Nombre oficial del alimento según USDA"
+      - name: calories_kcal
+        description: "Calorías por 100g del alimento según USDA"
       - name: quantity_g
         description: "Cantidad consumida en gramos"
         tests:
           - not_null
       - name: calories_consumed
-        description: "Calorías consumidas calculadas: calories_per_100g * quantity_g / 100"
+        description: "Calorías consumidas: calories_kcal * quantity_g / 100"
       - name: protein_consumed_g
         description: "Proteínas consumidas en gramos"
       - name: carbs_consumed_g
@@ -56,8 +57,20 @@ models:
         description: "Grasas consumidas en gramos"
       - name: fiber_consumed_g
         description: "Fibra consumida en gramos"
+      - name: calcium_consumed_mg
+        description: "Calcio consumido en miligramos — dato oficial USDA"
+      - name: iron_consumed_mg
+        description: "Hierro consumido en miligramos — dato oficial USDA"
+      - name: sodium_consumed_mg
+        description: "Sodio consumido en miligramos — dato oficial USDA"
+      - name: potassium_consumed_mg
+        description: "Potasio consumido en miligramos — dato oficial USDA"
+      - name: vitamin_c_consumed_mg
+        description: "Vitamina C consumida en miligramos — dato oficial USDA"
+      - name: vitamin_a_consumed_iu
+        description: "Vitamina A consumida en UI — dato oficial USDA"
       - name: target_calories
-        description: "Objetivo calórico diario del usuario en el momento del registro"
+        description: "Objetivo calórico diario del usuario"
       - name: target_protein_g
         description: "Objetivo de proteínas diarias del usuario"
       - name: target_carbs_g
@@ -69,3 +82,7 @@ models:
                       Nulo si el usuario no tiene objetivo calórico definido."
       - name: notes
         description: "Notas del registro de comida"
+      - name: created_at
+        description: "Timestamp de creación del registro — usado para carga incremental"
+        tests:
+          - not_null

@@ -15,7 +15,7 @@ food_log_items as (
 ),
 
 foods as (
-    select * from {{ ref('stg_foods') }}
+    select * from {{ ref('stg_usda_foods') }}
 ),
 
 goals as (
@@ -50,20 +50,30 @@ joined as (
         fl.meal_plan_id,
         fl.log_date,
         fl.meal_type,
-        fli.food_id,
+        fli.fdc_id                                              as food_id,
 
-        -- Atributos del alimento
-        f.food_name,
-        f.category                                              as food_category,
+        -- Atributos del alimento USDA
+        f.description                                           as food_name,
+        f.calories_kcal,
         fli.quantity_g,
 
         -- Métricas nutricionales consumidas según cantidad
         -- Todos los valores nutricionales son por 100g
-        ROUND(f.calories_per_100g * fli.quantity_g / 100, 2)   as calories_consumed,
+        ROUND(f.calories_kcal * fli.quantity_g / 100, 2)       as calories_consumed,
         ROUND(f.protein_g * fli.quantity_g / 100, 2)           as protein_consumed_g,
         ROUND(f.carbs_g * fli.quantity_g / 100, 2)             as carbs_consumed_g,
         ROUND(f.fat_g * fli.quantity_g / 100, 2)               as fat_consumed_g,
         ROUND(f.fiber_g * fli.quantity_g / 100, 2)             as fiber_consumed_g,
+
+        -- Minerales consumidos
+        ROUND(f.calcium_mg * fli.quantity_g / 100, 2)          as calcium_consumed_mg,
+        ROUND(f.iron_mg * fli.quantity_g / 100, 2)             as iron_consumed_mg,
+        ROUND(f.sodium_mg * fli.quantity_g / 100, 2)           as sodium_consumed_mg,
+        ROUND(f.potassium_mg * fli.quantity_g / 100, 2)        as potassium_consumed_mg,
+
+        -- Vitaminas consumidas
+        ROUND(f.vitamin_c_mg * fli.quantity_g / 100, 2)        as vitamin_c_consumed_mg,
+        ROUND(f.vitamin_a_iu * fli.quantity_g / 100, 2)        as vitamin_a_consumed_iu,
 
         -- Objetivos calóricos del usuario
         g.target_calories,
@@ -75,9 +85,9 @@ joined as (
         CASE
             WHEN g.target_calories IS NOT NULL
              AND g.target_calories > 0
-             AND f.calories_per_100g IS NOT NULL
+             AND f.calories_kcal IS NOT NULL
                 THEN ROUND(
-                    (f.calories_per_100g * fli.quantity_g / 100) / g.target_calories * 100
+                    (f.calories_kcal * fli.quantity_g / 100) / g.target_calories * 100
                 , 2)
             ELSE NULL
         END                                                     as pct_daily_calories,
@@ -90,10 +100,11 @@ joined as (
     left join food_logs fl
         on fli.food_log_id = fl.food_log_id
     left join foods f
-        on fli.food_id = f.food_id
+        on fli.fdc_id = f.fdc_id
     left join latest_goals g
         on fl.user_id = g.user_id
         and g.rn = 1
+
     {% if is_incremental() %}
     cross join max_created_at m
     {% endif %}
