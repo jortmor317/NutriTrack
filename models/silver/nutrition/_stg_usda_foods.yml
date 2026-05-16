@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: stg_usda_foods
+    description: "Alimentos de la USDA (SR Legacy) limpios y estandarizados.
+                  Datos oficiales del Departamento de Agricultura de Estados Unidos.
+                  Se aplana el array de nutrientes y se pivotan los más relevantes a columnas.
+                  7.792 alimentos cargados desde la API FoodData Central."
+    columns:
+      - name: fdc_id
+        description: "PK - Identificador único USDA (FoodData Central ID)"
+        tests:
+          - unique
+          - not_null
+      - name: description
+        description: "Nombre del alimento en inglés"
+        tests:
+          - not_null
+      - name: data_type
+        description: "Tipo de dato USDA (SR Legacy)"
+      - name: publication_date
+        description: "Fecha de publicación del registro en USDA"
+      - name: loaded_at
+        description: "Timestamp de carga en Bronze"
+        tests:
+          - not_null
+      - name: calories_kcal
+        description: "Calorías por 100g en kcal"
+      - name: protein_g
+        description: "Proteínas por 100g en gramos"
+      - name: carbs_g
+        description: "Carbohidratos por 100g en gramos"
+      - name: fat_g
+        description: "Grasas por 100g en gramos"
+      - name: fiber_g
+        description: "Fibra por 100g en gramos"
+      - name: sugars_g
+        description: "Azúcares totales por 100g en gramos"
+      - name: calcium_mg
+        description: "Calcio por 100g en miligramos"
+      - name: iron_mg
+        description: "Hierro por 100g en miligramos"
+      - name: sodium_mg
+        description: "Sodio por 100g en miligramos"
+      - name: potassium_mg
+        description: "Potasio por 100g en miligramos"
+      - name: vitamin_c_mg
+        description: "Vitamina C por 100g en miligramos"
+      - name: vitamin_a_iu
+        description: "Vitamina A por 100g en UI"

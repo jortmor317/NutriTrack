@@ -21,3 +21,4 @@ sources:
       - name: SUBSCRIPTION_PLANS
       - name: USERS
       - name: USER_NUTRITIONIST_ASSIGNMENTS
+      - name: USDA_FOODS
