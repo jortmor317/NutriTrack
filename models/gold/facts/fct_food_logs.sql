@@ -28,7 +28,6 @@ max_created_at as (
 ),
 {% endif %}
 
--- Objetivo calórico más reciente por usuario
 latest_goals as (
     select
         user_id,
@@ -49,39 +48,32 @@ joined as (
         fl.user_id,
         fl.meal_plan_id,
         fl.log_date,
+        -- Degenerate dimension: atributo de la transacción sin dimensión propia
         fl.meal_type,
+        -- FK a dim_foods
         fli.fdc_id                                              as food_id,
 
-        -- Atributos del alimento USDA
-        f.description                                           as food_name,
-        f.calories_kcal,
+        -- Métricas
         fli.quantity_g,
-
-        -- Métricas nutricionales consumidas según cantidad
-        -- Todos los valores nutricionales son por 100g
         ROUND(f.calories_kcal * fli.quantity_g / 100, 2)       as calories_consumed,
         ROUND(f.protein_g * fli.quantity_g / 100, 2)           as protein_consumed_g,
         ROUND(f.carbs_g * fli.quantity_g / 100, 2)             as carbs_consumed_g,
         ROUND(f.fat_g * fli.quantity_g / 100, 2)               as fat_consumed_g,
         ROUND(f.fiber_g * fli.quantity_g / 100, 2)             as fiber_consumed_g,
-
-        -- Minerales consumidos
         ROUND(f.calcium_mg * fli.quantity_g / 100, 2)          as calcium_consumed_mg,
         ROUND(f.iron_mg * fli.quantity_g / 100, 2)             as iron_consumed_mg,
         ROUND(f.sodium_mg * fli.quantity_g / 100, 2)           as sodium_consumed_mg,
         ROUND(f.potassium_mg * fli.quantity_g / 100, 2)        as potassium_consumed_mg,
-
-        -- Vitaminas consumidas
         ROUND(f.vitamin_c_mg * fli.quantity_g / 100, 2)        as vitamin_c_consumed_mg,
         ROUND(f.vitamin_a_iu * fli.quantity_g / 100, 2)        as vitamin_a_consumed_iu,
 
-        -- Objetivos calóricos del usuario
+        -- Métricas de contexto del usuario en el momento del registro
         g.target_calories,
         g.target_protein_g,
         g.target_carbs_g,
         g.target_fat_g,
 
-        -- % del objetivo calórico diario cubierto por este item
+        -- KPI calculado
         CASE
             WHEN g.target_calories IS NOT NULL
              AND g.target_calories > 0
@@ -92,7 +84,7 @@ joined as (
             ELSE NULL
         END                                                     as pct_daily_calories,
 
-        -- Notas del log
+        -- Degenerate dimension
         fl.notes,
         fl.created_at
 

@@ -2,9 +2,9 @@ version: 2
 
 models:
   - name: dim_recipes
-    description: "Dimensión de recetas de NutriTrack enriquecida con macronutrientes
-                  calculados a partir de los ingredientes y datos oficiales USDA.
-                  Incluye totales por receta y por porción."
+    description: "Dimensión de recetas de NutriTrack con atributos descriptivos.
+                  Las métricas nutricionales calculadas (calorías, proteínas, etc.)
+                  se encuentran en fct_recipe_nutrition siguiendo el modelo Kimball."
     columns:
       - name: recipe_id
         description: "PK - Identificador único de la receta (UUID)"
@@ -29,31 +29,3 @@ models:
         description: "Número de porciones"
       - name: created_at
         description: "Fecha de creación de la receta"
-      - name: total_ingredients
-        description: "Número total de ingredientes de la receta"
-      - name: total_calories
-        description: "Calorías totales de la receta calculadas con datos USDA"
-      - name: total_protein_g
-        description: "Proteínas totales en gramos"
-      - name: total_carbs_g
-        description: "Carbohidratos totales en gramos"
-      - name: total_fat_g
-        description: "Grasas totales en gramos"
-      - name: total_fiber_g
-        description: "Fibra total en gramos"
-      - name: total_calcium_mg
-        description: "Calcio total en miligramos"
-      - name: total_iron_mg
-        description: "Hierro total en miligramos"
-      - name: total_vitamin_c_mg
-        description: "Vitamina C total en miligramos"
-      - name: calories_per_serving
-        description: "Calorías por porción. Nulo si no tiene servings definido."
-      - name: protein_per_serving_g
-        description: "Proteínas por porción en gramos. Nulo si no tiene servings definido."
-      - name: macronutrient_profile
-        description: "Perfil macronutricional dominante: protein_rich, carb_rich, fat_rich, balanced"
-        tests:
-          - accepted_values:
-              arguments:
-                values: ['protein_rich', 'carb_rich', 'fat_rich', 'balanced']
