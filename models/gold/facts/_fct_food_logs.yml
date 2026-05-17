@@ -7,7 +7,9 @@ models:
                   Cada fila representa un alimento consumido en una comida concreta,
                   con métricas nutricionales calculadas según la cantidad consumida
                   usando datos oficiales USDA (SR Legacy).
-                  Incluye macronutrientes, minerales y vitaminas consumidos."
+                  meal_type y notes son degenerate dimensions — atributos de la transacción
+                  sin dimensión propia, concepto aceptado en modelado Kimball.
+                  target_* son métricas de contexto del usuario en el momento del registro."
     columns:
       - name: food_log_item_id
         description: "PK - Identificador único del item de comida (UUID)"
@@ -19,7 +21,7 @@ models:
         tests:
           - not_null
       - name: user_id
-        description: "FK - Identificador del usuario (INTEGER)"
+        description: "FK - Identificador del usuario (INTEGER) → dim_users"
         tests:
           - not_null
       - name: meal_plan_id
@@ -29,7 +31,8 @@ models:
         tests:
           - not_null
       - name: meal_type
-        description: "Tipo de comida: breakfast, lunch, dinner, snack"
+        description: "Degenerate dimension — tipo de comida (breakfast, lunch, dinner, snack).
+                      Atributo de la transacción sin dimensión propia según Kimball."
         tests:
           - not_null
           - accepted_values:
@@ -39,10 +42,6 @@ models:
         description: "FK - Identificador USDA del alimento (fdc_id) → dim_foods"
         tests:
           - not_null
-      - name: food_name
-        description: "Nombre oficial del alimento según USDA"
-      - name: calories_kcal
-        description: "Calorías por 100g del alimento según USDA"
       - name: quantity_g
         description: "Cantidad consumida en gramos"
         tests:
@@ -58,31 +57,30 @@ models:
       - name: fiber_consumed_g
         description: "Fibra consumida en gramos"
       - name: calcium_consumed_mg
-        description: "Calcio consumido en miligramos — dato oficial USDA"
+        description: "Calcio consumido en miligramos"
       - name: iron_consumed_mg
-        description: "Hierro consumido en miligramos — dato oficial USDA"
+        description: "Hierro consumido en miligramos"
       - name: sodium_consumed_mg
-        description: "Sodio consumido en miligramos — dato oficial USDA"
+        description: "Sodio consumido en miligramos"
       - name: potassium_consumed_mg
-        description: "Potasio consumido en miligramos — dato oficial USDA"
+        description: "Potasio consumido en miligramos"
       - name: vitamin_c_consumed_mg
-        description: "Vitamina C consumida en miligramos — dato oficial USDA"
+        description: "Vitamina C consumida en miligramos"
       - name: vitamin_a_consumed_iu
-        description: "Vitamina A consumida en UI — dato oficial USDA"
+        description: "Vitamina A consumida en UI"
       - name: target_calories
-        description: "Objetivo calórico diario del usuario"
+        description: "Métrica de contexto — objetivo calórico diario del usuario en el momento del registro"
       - name: target_protein_g
-        description: "Objetivo de proteínas diarias del usuario"
+        description: "Métrica de contexto — objetivo de proteínas diarias del usuario"
       - name: target_carbs_g
-        description: "Objetivo de carbohidratos diarios del usuario"
+        description: "Métrica de contexto — objetivo de carbohidratos diarios del usuario"
       - name: target_fat_g
-        description: "Objetivo de grasas diarias del usuario"
+        description: "Métrica de contexto — objetivo de grasas diarias del usuario"
       - name: pct_daily_calories
-        description: "Porcentaje del objetivo calórico diario cubierto por este item.
-                      Nulo si el usuario no tiene objetivo calórico definido."
+        description: "KPI — porcentaje del objetivo calórico diario cubierto por este item"
       - name: notes
-        description: "Notas del registro de comida"
+        description: "Degenerate dimension — notas del registro de comida"
       - name: created_at
-        description: "Timestamp de creación del registro — usado para carga incremental"
+        description: "Timestamp de creación — usado para carga incremental"
         tests:
           - not_null

@@ -37,13 +37,13 @@ joined as (
         s.promo_id,
         s.start_date,
         s.end_date,
+
+        -- Degenerate dimension: estado de la suscripción
         s.status,
 
-        -- Atributos del plan
-        p.price                                                 as plan_price,
-        p.billing_period,
-
         -- Métricas de revenue
+        -- revenue se calcula en la fact porque depende del precio del plan
+        -- en el momento de la contratación y del descuento aplicado
         CASE
             WHEN s.promo_id IS NOT NULL AND pr.discount_pct IS NOT NULL
                 THEN ROUND(p.price * (1 - pr.discount_pct / 100), 2)
@@ -61,7 +61,7 @@ joined as (
         DATEDIFF('day', s.start_date,
             COALESCE(s.end_date, CURRENT_DATE()))               as duration_days,
 
-        -- Flags
+        -- Flags métricas
         CASE WHEN s.promo_id IS NOT NULL THEN TRUE
              ELSE FALSE
         END                                                     as had_promo,
@@ -70,7 +70,7 @@ joined as (
              ELSE FALSE
         END                                                     as is_cancelled,
 
-        -- Motivo de cancelación si existe
+        -- Degenerate dimensions: atributos de la cancelación sin dimensión propia
         c.reason                                                as cancellation_reason,
         c.cancelled_at,
 

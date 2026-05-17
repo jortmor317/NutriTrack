@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: fct_recipe_nutrition
+    description: "Fact de nutrición por receta de NutriTrack.
+                  Granularidad: una fila por receta (recipe_id).
+                  Métricas nutricionales calculadas sumando los ingredientes
+                  con datos oficiales USDA SR Legacy.
+                  macronutrient_profile es un atributo derivado de las métricas
+                  de la propia fact."
+    columns:
+      - name: recipe_id
+        description: "PK/FK - Identificador único de la receta (UUID) → dim_recipes"
+        tests:
+          - unique
+          - not_null
+      - name: total_ingredients
+        description: "Número total de ingredientes de la receta"
+      - name: total_calories
+        description: "Calorías totales calculadas con datos USDA"
+      - name: total_protein_g
+        description: "Proteínas totales en gramos"
+      - name: total_carbs_g
+        description: "Carbohidratos totales en gramos"
+      - name: total_fat_g
+        description: "Grasas totales en gramos"
+      - name: total_fiber_g
+        description: "Fibra total en gramos"
+      - name: total_calcium_mg
+        description: "Calcio total en miligramos"
+      - name: total_iron_mg
+        description: "Hierro total en miligramos"
+      - name: total_vitamin_c_mg
+        description: "Vitamina C total en miligramos"
+      - name: calories_base
+        description: "Calorías base de la receta"
+      - name: macronutrient_profile
+        description: "Perfil macronutricional dominante derivado de las métricas:
+                      protein_rich, carb_rich, fat_rich, balanced"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['protein_rich', 'carb_rich', 'fat_rich', 'balanced']
