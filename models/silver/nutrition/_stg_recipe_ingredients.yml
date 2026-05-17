@@ -3,9 +3,11 @@ version: 2
 models:
   - name: stg_recipe_ingredients
     description: "Ingredientes de recetas limpios y estandarizados.
+                  Se sustituye food_id (UUID sintético) por fdc_id (identificador oficial USDA)
+                  para permitir el enriquecimiento nutricional con datos oficiales.
                   Se normaliza unit a 'g' ya que Bronze contiene múltiples
-                  variantes para gramos ('g', 'gr', 'G', 'grams') y 353 nulos.
-                  Se asume 'g' en nulos ya que quantity_g indica que la medida 
+                  variantes para gramos ('g', 'gr', 'G', 'grams') y nulos.
+                  Se asume 'g' en nulos ya que quantity_g indica que la medida
                   es siempre en gramos."
     columns:
       - name: recipe_ingredient_id
@@ -17,15 +19,18 @@ models:
         description: "FK - Identificador de la receta (UUID)"
         tests:
           - not_null
-      - name: food_id
-        description: "FK - Identificador del alimento (UUID)"
+      - name: fdc_id
+        description: "FK - Identificador oficial USDA (FoodData Central ID).
+                      Sustituye al food_id sintético para ligar con datos nutricionales oficiales."
         tests:
           - not_null
+      - name: food_id_original
+        description: "FOOD_ID original de Bronze — mantenido por trazabilidad con el sistema origen"
       - name: quantity_g
         description: "Cantidad en gramos del ingrediente. Puede ser nulo (27 registros)."
       - name: unit
-        description: "Unidad de medida normalizada a 'g'. Bronze contenía 'g', 'gr', 'G', 
-                      'grams' y 353 nulos. Se asume 'g' en todos los casos."
+        description: "Unidad de medida normalizada a 'g'. Bronze contenía 'g', 'gr', 'G',
+                      'grams' y nulos. Se asume 'g' en todos los casos."
         tests:
           - not_null
           - accepted_values:
