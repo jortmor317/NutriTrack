@@ -11,7 +11,12 @@ renamed as (
         FDC_ID::VARCHAR                 as fdc_id,
         -- Mantenemos FOOD_ID original por trazabilidad con Bronze
         FOOD_ID::VARCHAR                as food_id_original,
-        QUANTITY_G::FLOAT               as quantity_g,
+        -- Nullificamos quantity_g negativos — físicamente imposible
+        -- Bronze contenía valores negativos por error de sistema origen
+        CASE
+            WHEN QUANTITY_G::FLOAT < 0 THEN NULL
+            ELSE QUANTITY_G::FLOAT
+        END                             as quantity_g,
         -- Normalizamos unit
         CASE LOWER(COALESCE(UNIT, 'g'))
             WHEN 'g'        THEN 'g'

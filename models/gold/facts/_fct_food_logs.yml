@@ -43,9 +43,14 @@ models:
         tests:
           - not_null
       - name: quantity_g
-        description: "Cantidad consumida en gramos"
+        description: "Cantidad consumida en gramos.
+                      Bronze contenía valores negativos (error de sistema origen)
+                      que se nullifican en stg_food_log_items — una cantidad negativa
+                      es físicamente imposible. Los nulos son esperados y conocidos."
         tests:
-          - not_null
+          - not_null:
+              config:
+                severity: warn
       - name: calories_consumed
         description: "Calorías consumidas: calories_kcal * quantity_g / 100"
       - name: protein_consumed_g

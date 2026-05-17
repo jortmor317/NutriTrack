@@ -27,7 +27,9 @@ models:
       - name: food_id_original
         description: "FOOD_ID original de Bronze — mantenido por trazabilidad con el sistema origen"
       - name: quantity_g
-        description: "Cantidad en gramos del alimento. Puede ser nulo (27 registros)."
+        description: "Cantidad consumida en gramos. 
+                      Bronze contenía valores negativos (error de sistema origen) 
+                      que se nullifican — una cantidad negativa es físicamente imposible."
       - name: unit
         description: "Unidad de medida normalizada a 'g'. Bronze contenía 'g', 'gr', 'G', 
                       'grams' y nulos. Se asume 'g' en todos los casos."
