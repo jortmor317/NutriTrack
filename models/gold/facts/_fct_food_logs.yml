@@ -49,8 +49,7 @@ models:
                       es físicamente imposible. Los nulos son esperados y conocidos."
         tests:
           - not_null:
-              config:
-                severity: warn
+             
       - name: calories_consumed
         description: "Calorías consumidas: calories_kcal * quantity_g / 100"
       - name: protein_consumed_g

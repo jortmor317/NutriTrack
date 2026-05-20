@@ -12,9 +12,9 @@ renamed as (
         -- Mantenemos FOOD_ID original por trazabilidad con Bronze
         FOOD_ID::VARCHAR                as food_id_original,
         -- Nullificamos quantity_g negativos — físicamente imposible
-        -- Bronze contenía valores negativos por error de sistema origen
+        -- Los negativos se convierten a 0 — cantidad desconocida pero registro válido
         CASE
-            WHEN QUANTITY_G::FLOAT < 0 THEN NULL
+            WHEN QUANTITY_G::FLOAT < 0 THEN 0
             ELSE QUANTITY_G::FLOAT
         END                             as quantity_g,
         -- Normalizamos unit
