@@ -25,7 +25,7 @@ models:
         tests:
           - not_null
       - name: meal_plan_id
-        description: "FK - Identificador del plan de comida (UUID)"
+        description: "FK - Identificador del plan de comida (UUID) → dim_meal_plans"
       - name: log_date
         description: "FK - Fecha del registro → dim_dates"
         tests:
@@ -45,11 +45,9 @@ models:
       - name: quantity_g
         description: "Cantidad consumida en gramos.
                       Bronze contenía valores negativos (error de sistema origen)
-                      que se nullifican en stg_food_log_items — una cantidad negativa
-                      es físicamente imposible. Los nulos son esperados y conocidos."
+                      que se convierten a 0 — cantidad desconocida pero registro válido."
         tests:
-          - not_null:
-             
+          - not_null
       - name: calories_consumed
         description: "Calorías consumidas: calories_kcal * quantity_g / 100"
       - name: protein_consumed_g
