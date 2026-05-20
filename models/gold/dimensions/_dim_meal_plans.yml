@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: dim_meal_plans
+    description: "Dimensión de planes de comida de NutriTrack.
+                  Resuelve la FK huérfana meal_plan_id en fct_food_logs.
+                  Un plan de comida es creado por un nutricionista para un usuario
+                  con objetivos nutricionales diarios definidos."
+    columns:
+      - name: meal_plan_id
+        description: "PK - Identificador único del plan de comida (UUID)"
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "FK - Identificador del usuario (INTEGER) → dim_users"
+        tests:
+          - not_null
+      - name: nutritionist_id
+        description: "FK - Identificador del nutricionista (UUID) → dim_nutritionists"
+        tests:
+          - not_null
+      - name: meal_plan_name
+        description: "Nombre del plan de comida"
+      - name: daily_calories
+        description: "Objetivo de calorías diarias del plan"
+      - name: daily_protein_g
+        description: "Objetivo de proteínas diarias en gramos"
+      - name: daily_carbs_g
+        description: "Objetivo de carbohidratos diarios en gramos"
+      - name: daily_fat_g
+        description: "Objetivo de grasas diarias en gramos"
+      - name: start_date
+        description: "Fecha de inicio del plan"
+        tests:
+          - not_null
+      - name: end_date
+        description: "Fecha de fin del plan. Nulo si está activo."
+      - name: is_active
+        description: "Flag — indica si el plan está activo actualmente"
+        tests:
+          - not_null
