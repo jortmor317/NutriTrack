@@ -40,13 +40,6 @@ enriched as (
         total_iron_mg,
         total_vitamin_c_mg,
 
-        -- Métricas por porción
-        -- Se calculan en la fact porque dependen de servings de dim_recipes
-        -- pero son métricas numéricas, no atributos descriptivos
-        CASE WHEN total_calories IS NOT NULL
-            THEN total_calories
-            ELSE NULL
-        END                                                     as calories_base,
 
         -- Perfil macronutricional — atributo derivado de las métricas
         CASE

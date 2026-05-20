@@ -32,8 +32,6 @@ models:
         description: "Hierro total en miligramos"
       - name: total_vitamin_c_mg
         description: "Vitamina C total en miligramos"
-      - name: calories_base
-        description: "Calorías base de la receta"
       - name: macronutrient_profile
         description: "Perfil macronutricional dominante derivado de las métricas:
                       protein_rich, carb_rich, fat_rich, balanced"
