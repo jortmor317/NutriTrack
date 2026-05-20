@@ -103,7 +103,7 @@ joined as (
 
     where 1=1
     {% if is_incremental() %}
-        and fl.created_at > m.max_created_at
+        and fl.created_at >= m.max_created_at
     {% endif %}
 )
 
