@@ -18,10 +18,6 @@ clean-targets:
 
 models:
   nutritrack:
-    bronze:
-      +database: "NUTRITRACK_{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"
-      +schema: bronze
-      +materialized: view
     silver:
       +database: "NUTRITRACK_{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"
       +schema: silver
