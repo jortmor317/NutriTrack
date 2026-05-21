@@ -14,7 +14,6 @@ sources:
       - name: NUTRITIONISTS
       - name: PROMOS
       - name: RECIPES
-      - name: RECIPES_RAW
       - name: RECIPE_INGREDIENTS
       - name: SUBSCRIPTIONS
       - name: SUBSCRIPTION_CANCELLATIONS
