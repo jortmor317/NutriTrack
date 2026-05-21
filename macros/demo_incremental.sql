@@ -31,7 +31,7 @@
     {% endset %}
     {% do run_query(insert_food_log) %}
 
-    {{ log("✅ Registros insertados en Bronze DEV.", info=true) }}
+    {{ log("Registros insertados en Bronze DEV.", info=true) }}
     {{ log("Ahora ejecuta: dbt build --select fct_subscriptions fct_food_logs", info=true) }}
 
 {% endmacro %}

@@ -9,7 +9,7 @@
     {% endset %}
     {% do run_query(update_price) %}
 
-    {{ log("✅ Precio de Basic incrementado en 1€ en Bronze.", info=true) }}
+    {{ log("Precio de Basic incrementado en 1€ en Bronze.", info=true) }}
     {{ log("Ahora ejecuta: dbt snapshot", info=true) }}
     {{ log("Luego ejecuta: dbt run-operation validate_scd2", info=true) }}
 
